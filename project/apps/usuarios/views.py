@@ -8,7 +8,10 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import CriarUsuarioForm
 from usuarios.models import Usuario
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def home(request):
     return render(request, 'home/home.html')
 
@@ -57,3 +60,12 @@ def usuario_registrar(request):
         context = {'form': form}
         return render(request, 'usuarios/registrar.html', context)
 
+
+@login_required
+def deslogar_usuario(request):
+    user = request.user
+    if user.is_authenticated:
+        logout(request)
+    else:
+        messages.error(request, 'Usuário não está autenticado.')
+    return redirect('login')
