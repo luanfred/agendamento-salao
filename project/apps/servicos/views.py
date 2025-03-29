@@ -1,7 +1,9 @@
 from django.shortcuts import redirect, render
 from .models import Servico
 from .forms import ServicoForm
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def index(request):
     if request.method == 'GET':
         servicos = Servico.objects.all()
@@ -9,7 +11,7 @@ def index(request):
     else:
         return redirect('index_servico')
 
-
+@login_required
 def registrar_servico(request):
     if request.method == 'POST':
         form = ServicoForm(request.POST)
@@ -30,7 +32,7 @@ def registrar_servico(request):
         }
         return render(request, 'servicos/registrar.html', context=context)
 
-
+@login_required
 def editar_servico(request, id):
     servico = Servico.objects.get(id=id)
     if request.method == 'POST':
@@ -53,7 +55,7 @@ def editar_servico(request, id):
         }
         return render(request, 'servicos/registrar.html', context=context)
     
-
+@login_required
 def deletar_servico(request, id):
     servico = Servico.objects.get(id=id)
     if request.method == 'POST':
@@ -65,7 +67,7 @@ def deletar_servico(request, id):
         }
         return render(request, 'servicos/confirmar_deletar_servico.html', context=context)
     
-
+@login_required
 def detalhes_servico(request, id):
     servico = Servico.objects.get(id=id)
     form = ServicoForm(instance=servico)
