@@ -1,0 +1,19 @@
+{% extends 'servicos/registrar.html' %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $('#id_preco').mask('0.000.000,00', { reverse: true })
+    })
+    
+    $(document).ready(function () {
+      // todos os campos deve ser inativados
+      $('#id_nome').prop('disabled', true)
+      $('#id_descricao').prop('disabled', true)
+      $('#id_duracao').prop('disabled', true)
+      $('#id_preco').prop('disabled', true)
+    
+      $('button[type="submit"]').remove()
+    })
+  </script>
+{% endblock %}

@@ -67,7 +67,7 @@
             <div class="navbar-logo">
               <a class="mobile-menu" id="mobile-collapse" href="#!"><i class="ti-menu"></i></a>
               <a class="mobile-search morphsearch-search" href="#"><i class="ti-search"></i></a>
-              <a href="{% url 'home' %}"><img class="img-fluid" src="{% static 'images/main-logo-white-transparent.png' %}" alt="Theme-Logo" /></a>
+              <a href="{% url 'home' %}"><img class="img-fluid" style="max-height: 60px; object-fit: contain;" src="{% static 'images/main-logo-white-transparent.png' %}" alt="Theme-Logo" /></a>
               <a class="mobile-options"><i class="ti-more"></i></a>
             </div>
 
@@ -115,8 +115,8 @@
                 </div>
                 <ul class="pcoded-item pcoded-left-item">
                   <li class="active">
-                    <a href="index.html">
-                      <span class="pcoded-micon"><i class="ti-home"></i><b>S</b></span>
+                    <a href="{% url 'index_servico' %}">
+                      <span class="pcoded-micon"><i class="ti-briefcase"></i><b>S</b></span>
                       <span class="pcoded-mtext" data-i18n="nav.dash.main">Serviços</span>
                       <span class="pcoded-mcaret"></span>
                     </a>
@@ -155,21 +155,23 @@
     <script type="text/javascript" src="{% static 'js/jquery-ui/jquery-ui.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/popper.js/popper.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/bootstrap/js/bootstrap.min.js' %}"></script>
-    <!-- jquery slimscroll js -->
-    <script type="text/javascript" src="{% static 'js/jquery-slimscroll/jquery.slimscroll.js' %}"></script>
+
     <!-- modernizr js -->
     <script type="text/javascript" src="{% static 'js/modernizr/modernizr.js' %}"></script>
-    <!-- am chart -->
-    <script src="pages/widget/amchart/amcharts.min.js"></script>
-    <script src="pages/widget/amchart/serial.min.js"></script>
     <!-- Todo js -->
-    <script type="text/javascript" src="pages/todo/todo.js "></script>
-    <!-- Custom js -->
-    <script type="text/javascript" src="pages/dashboard/custom-dashboard.js"></script>
+    <script type="text/javascript" src="{% static 'pages/todo/todo.js' %}"></script>
+
     <script type="text/javascript" src="{% static 'js/script.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/SmoothScroll.js' %}"></script>
+
     <script src="{% static 'js/pcoded.min.js' %}"></script>
     <script src="{% static 'js/demo-12.js' %}"></script>
     <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+    {% block scripts %}
+
+    {% endblock %}
   </body>
 </html>

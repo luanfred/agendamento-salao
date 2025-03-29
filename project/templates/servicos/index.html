@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="page-header card">
+    <div class="row align-items-end">
+      <div class="col-lg-8">
+        <div class="page-header-title">
+          <i class="icofont icofont-table bg-c-blue"></i>
+          <div class="d-inline">
+            <h4>Listagem de Serviços</h4>
+            <span></span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="page-header-breadcrumb">
+          <a href="{% url 'registrar_servico' %}" class="btn btn-primary">Adicionar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-body">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-right">
+          <ul class="list-unstyled card-option">
+            <li>
+              <i class="icofont icofont-simple-left"></i>
+            </li>
+            <li>
+              <i class="icofont icofont-maximize full-card"></i>
+            </li>
+            <li>
+              <i class="icofont icofont-minus minimize-card"></i>
+            </li>
+            <li>
+              <a href="{% url 'index_servico' %}"><i class="icofont icofont-refresh reload-card"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-block table-border-style">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Duração</th>
+                <th>Preço</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for servico in servicos %}
+                <tr>
+                  <td>{{ servico.nome|default_if_none:'' }}</td>
+                  <td>{{ servico.descricao|default_if_none:'' }}</td>
+                  <td>{{ servico.duracao_formatada }}</td>
+                  <td>{{ servico.preco|default_if_none:'' }}</td>
+                  <td>
+                    <a href="{% url 'detalhes_servico' servico.id %}" class="btn btn-info btn-md"><i class="ti-eye"></i></a>
+                    <a href="{% url 'editar_servico' servico.id %}" class="btn btn-warning btn-md"><i class="ti-pencil"></i></a>
+                    <a href="{% url 'deletar_servico' servico.id %}" class="btn btn-danger btn-md"><i class="ti-trash"></i></a>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="4" class="text-center">Nenhum serviço encontrado.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
