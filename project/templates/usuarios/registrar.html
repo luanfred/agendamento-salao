@@ -5,10 +5,10 @@
     <title>Leila Salão</title>
     <!-- HTML5 Shim and Respond.js IE9 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--                          [if lt IE 9]>
+    <!--                            [if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-      <![endif]                          -->
+      <![endif]                            -->
     <!-- Meta -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
@@ -161,5 +161,20 @@
     <script type="text/javascript" src="{% static 'js/modernizr/modernizr.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/modernizr/css-scrollbars.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/common-pages.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script>
+      $('#id_telefone')
+        .mask('(00) 00000-0000', {
+          placeholder: '(__) _____-____'
+        })
+        .on('blur', function () {
+          var $this = $(this)
+          if ($this.val().length == 15) {
+            $this.mask('(00) 00000-0000')
+          } else {
+            $this.mask('(00) 0000-00009')
+          }
+        })
+    </script>
   </body>
 </html>
