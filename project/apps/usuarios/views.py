@@ -7,6 +7,11 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import CriarUsuarioForm
+from usuarios.models import Usuario
+
+def home(request):
+    return render(request, 'home/home.html')
+
 
 def usuario_registrar(request):
     if request.method == 'POST':
@@ -16,6 +21,7 @@ def usuario_registrar(request):
             ultimo_nome = form.cleaned_data['ultimo_nome']
             senha = form.cleaned_data['senha']
             email = form.cleaned_data['email']
+            telefone = form.cleaned_data['telefone']
 
             # Verifica se o usuário já existe
             if User.objects.filter(username=email).exists():
@@ -31,10 +37,15 @@ def usuario_registrar(request):
             user.set_password(senha)
             user.save()
 
+            usuario = Usuario(
+                telefone=telefone,
+                user_id=user,
+            )
+            usuario.save()
+
             messages.success(request, 'Usuário criado com sucesso!')
             return redirect('login')
         else:
-            # Se o formulário não for válido, exibe as mensagens de erro
             for error in form.errors.values():
                 messages.error(request, str(error))
 

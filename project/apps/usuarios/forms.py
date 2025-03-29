@@ -17,6 +17,13 @@ class CriarUsuarioForm(forms.Form):
             'placeholder': 'Último Nome',
         })
     )
+    telefone = forms.CharField(
+        max_length=15,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Telefone',
+        })
+    )
     email = forms.EmailField(
         max_length=50,
         widget=forms.EmailInput(attrs={

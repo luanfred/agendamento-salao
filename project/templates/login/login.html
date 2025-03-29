@@ -5,10 +5,10 @@
     <title>Leila Salão</title>
     <!-- HTML5 Shim and Respond.js IE9 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--    [if lt IE 9]>
+    <!--        [if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-      <![endif]    -->
+      <![endif]        -->
     <!-- Meta -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
@@ -78,7 +78,8 @@
           <div class="col-sm-12">
             <!-- Authentication card start -->
             <div class="login-card card-block auth-body mr-auto ml-auto">
-              <form class="md-float-material">
+              <form class="md-float-material" method="post">
+                {% csrf_token %}
                 <div class="auth-box">
                   <div class="m-b-5">
                     <div class="text-center">
@@ -104,11 +105,12 @@
 
                   <hr />
                   <div class="input-group">
-                    <input type="email" class="form-control" placeholder="Endereço de e-mail" />
+                    {{ form.email }}
                     <span class="md-line"></span>
                   </div>
+
                   <div class="input-group">
-                    <input type="password" class="form-control" placeholder="Senha" />
+                    {{ form.senha }}
                     <span class="md-line"></span>
                   </div>
                   <div class="d-flex m-t-25 text-right justify-content-end">
@@ -118,7 +120,7 @@
                   </div>
                   <div class="row m-t-30">
                     <div class="col-md-12">
-                      <button type="button" class="btn btn-danger btn-md btn-block waves-effect text-center m-b-20">Entrar</button>
+                      <button type="submit" class="btn btn-danger btn-md btn-block waves-effect text-center m-b-20">Entrar</button>
                     </div>
                   </div>
                 </div>
