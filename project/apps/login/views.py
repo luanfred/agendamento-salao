@@ -21,7 +21,7 @@ def login_view(request):
                     login(request, user)
                     return redirect('home')
                 else:
-                    messages.error(request, 'Senha incorreta.')
+                    messages.error(request, 'E-mail ou senha inválidos.')
             except User.DoesNotExist:
                 messages.error(request, 'Usuário não encontrado.')
             context = {'form': form}

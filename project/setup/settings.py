@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'setup.context_processors.get_usuario_ativo',
             ],
         },
     },
@@ -131,3 +132,6 @@ sys.path.append(os.path.join(BASE_DIR, 'apps'))
 
 # Configuração do diretório de arquivos estáticos
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# Redireciona o usuário para a página de login se não estiver autenticado
+LOGIN_URL = '/login/'
