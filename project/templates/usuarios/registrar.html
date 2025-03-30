@@ -5,10 +5,10 @@
     <title>Leila Salão</title>
     <!-- HTML5 Shim and Respond.js IE9 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--                            [if lt IE 9]>
+    <!--                                                [if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-      <![endif]                            -->
+      <![endif]                                                -->
     <!-- Meta -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
@@ -79,6 +79,8 @@
             <!-- Authentication card start -->
             <div class="login-card card-block auth-body mr-auto ml-auto">
               <form class="md-float-material" method="post" id="formRegistrar">
+                <input type="text" value="N" id="is-funcionario" name="is-funcionario" hidden />
+
                 {% csrf_token %}
                 <div class="auth-box">
                   <div class="m-b-5">
@@ -102,8 +104,18 @@
                       {% endif %}
                     {% endfor %}
                   {% endif %}
-
                   <hr />
+                  <div class="row m-t-25 text-left">
+                    <div class="col-md-12">
+                      <div class="checkbox-fade fade-in-primary">
+                        <label>
+                          <input type="checkbox" value="S" id="checkbox-funcionario" name="checkbox-funcionario" />
+                          <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                          <span class="text-inverse">Cadastre-se como funcionário</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
                   <div class="input-group">
                     {{ form.primeiro_nome }}
                     <span class="md-line"></span>
@@ -133,9 +145,15 @@
                     {{ form.confirmar_senha }}
                     <span class="md-line"></span>
                   </div>
+
+                  <div class="input-group" id="div_chave_acesso" hidden>
+                    <input type="text" class="form-control" name="chave_acesso" id="chave_acesso" placeholder="Chave de Acesso" required />
+                    <span class="md-line"></span>
+                  </div>
+
                   <div class="row m-t-30">
                     <div class="col-md-12">
-                      <button type="submit" class="btn btn-danger btn-md btn-block waves-effect text-center m-b-20">Cadastar</button>
+                      <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Cadastar</button>
                     </div>
                   </div>
                 </div>
@@ -175,6 +193,16 @@
             $this.mask('(00) 0000-00009')
           }
         })
+      
+      $('#checkbox-funcionario').change(function () {
+        if ($(this).is(':checked')) {
+          $('#div_chave_acesso').removeAttr('hidden')
+          $('#is-funcionario').val('S')
+        } else {
+          $('#div_chave_acesso').attr('hidden', 'hidden')
+          $('#is-funcionario').val('N')
+        }
+      })
     </script>
   </body>
 </html>

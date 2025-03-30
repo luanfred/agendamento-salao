@@ -10,6 +10,7 @@ from .forms import CriarUsuarioForm
 from usuarios.models import Usuario
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from parametros.models import Parametro
 
 @login_required
 def home(request):
@@ -25,11 +26,27 @@ def usuario_registrar(request):
             senha = form.cleaned_data['senha']
             email = form.cleaned_data['email']
             telefone = form.cleaned_data['telefone']
+            is_functionario = request.POST.get('is-funcionario')
+            chave_acesso = request.POST.get('chave_acesso', None)
+
+            # Verifica se a chave de acesso é a correta
+            if is_functionario == 'S':
+                is_functionario = True
+                parametro = Parametro.objects.first()
+                if parametro and not parametro.verificar_chave_acesso(chave_acesso):
+                    messages.error(request, 'Chave de acesso inválida.')
+                    return render(request, 'usuarios/registrar.html', {'form': form})
+                elif not parametro:
+                    messages.error(request, 'Parâmetro de configuração não encontrado.')
+                    return render(request, 'usuarios/registrar.html', {'form': form})
+            else:
+                is_functionario = False
+
 
             # Verifica se o usuário já existe
             if User.objects.filter(username=email).exists():
                 messages.error(request, 'Usuário já existe.')
-                return redirect('usuarios_registrar')
+                return render(request, 'usuarios/registrar.html', {'form': form})
 
             user = User(
                 username=email,
@@ -43,6 +60,7 @@ def usuario_registrar(request):
             usuario = Usuario(
                 telefone=telefone,
                 user_id=user,
+                funcionario=is_functionario
             )
             usuario.save()
 
