@@ -12,11 +12,13 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-4">
-        <div class="page-header-breadcrumb">
-          <a href="{% url 'registrar_servico' %}" class="btn btn-primary">Adicionar</a>
+      {% if is_funcionario %}
+        <div class="col-lg-4">
+          <div class="page-header-breadcrumb">
+            <a href="{% url 'registrar_servico' %}" class="btn btn-primary">Adicionar</a>
+          </div>
         </div>
-      </div>
+      {% endif %}
     </div>
   </div>
 
@@ -61,8 +63,10 @@
                   <td>{{ servico.preco|default_if_none:'' }}</td>
                   <td>
                     <a href="{% url 'detalhes_servico' servico.id %}" class="btn btn-info btn-md"><i class="ti-eye"></i></a>
-                    <a href="{% url 'editar_servico' servico.id %}" class="btn btn-warning btn-md"><i class="ti-pencil"></i></a>
-                    <a href="{% url 'deletar_servico' servico.id %}" class="btn btn-danger btn-md"><i class="ti-trash"></i></a>
+                    {% if is_funcionario %}
+                      <a href="{% url 'editar_servico' servico.id %}" class="btn btn-warning btn-md"><i class="ti-pencil"></i></a>
+                      <a href="{% url 'deletar_servico' servico.id %}" class="btn btn-danger btn-md"><i class="ti-trash"></i></a>
+                    {% endif %}
                   </td>
                 </tr>
               {% empty %}

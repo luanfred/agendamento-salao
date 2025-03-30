@@ -14,6 +14,8 @@
     <link rel="stylesheet" type="text/css" href="{% static 'icon/icofont/css/icofont.css' %}" />
     <!-- Style.css -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+    <!-- toastr -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
     <title>
       {% block title %}
         Leila Salão
@@ -114,20 +116,53 @@
                   </div>
                 </div>
                 <ul class="pcoded-item pcoded-left-item">
-                  <li class="active">
-                    <a href="{% url 'index_servico' %}">
-                      <span class="pcoded-micon"><i class="ti-briefcase"></i><b>S</b></span>
-                      <span class="pcoded-mtext" data-i18n="nav.dash.main">Serviços</span>
-                      <span class="pcoded-mcaret"></span>
-                    </a>
-                  </li>
-                  <li class="active">
-                    <a href="{% url 'index_parametro' %}">
-                      <span class="pcoded-micon"><i class="ti-settings"></i><b></b></span>
-                      <span class="pcoded-mtext" data-i18n="nav.dash.main">Parametros</span>
-                      <span class="pcoded-mcaret"></span>
-                    </a>
-                  </li>
+                  {% if is_funcionario %}
+                    <li class="active">
+                      <a href="{% url 'index_servico' %}">
+                        <span class="pcoded-micon"><i class="ti-briefcase"></i><b>S</b></span>
+                        <span class="pcoded-mtext" data-i18n="nav.dash.main">Serviços</span>
+                        <span class="pcoded-mcaret"></span>
+                      </a>
+                    </li>
+                    <li class="active">
+                      <a href="{% url 'index_parametro' %}">
+                        <span class="pcoded-micon"><i class="ti-settings"></i><b></b></span>
+                        <span class="pcoded-mtext" data-i18n="nav.dash.main">Parametros</span>
+                        <span class="pcoded-mcaret"></span>
+                      </a>
+                    </li>
+                  {% elif not is_funcionario %}
+                    <li class="pcoded-hasmenu" dropdown-icon="style1" subitem-icon="style6">
+                      <a href="javascript:void(0)">
+                        <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i></span>
+                        <span class="pcoded-mtext" data-i18n="nav.basic-components.main">Agendamentos</span>
+                        <span class="pcoded-mcaret"></span>
+                      </a>
+                      <ul class="pcoded-submenu">
+                        <li class="">
+                          <a href="{% url 'registar_agendamento' %}">
+                            <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                            <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Novo Agendamento</span>
+                            <span class="pcoded-mcaret"></span>
+                          </a>
+                        </li>
+                        <li class="">
+                          <a href="auth-sign-up.html">
+                            <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                            <span class="pcoded-mtext" data-i18n="nav.basic-components.breadcrumbs">Lista de Agendamentos</span>
+                            <span class="pcoded-mcaret"></span>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li class="active">
+                      <a href="{% url 'index_servico' %}">
+                        <span class="pcoded-micon"><i class="ti-briefcase"></i><b>S</b></span>
+                        <span class="pcoded-mtext" data-i18n="nav.dash.main">Serviços</span>
+                        <span class="pcoded-mcaret"></span>
+                      </a>
+                    </li>
+                  {% endif %}
                 </ul>
               </div>
             </nav>
@@ -174,6 +209,8 @@
     <script src="{% static 'js/pcoded.min.js' %}"></script>
     <script src="{% static 'js/demo-12.js' %}"></script>
     <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+
+    <script src="{% static 'js/notification.js' %}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 

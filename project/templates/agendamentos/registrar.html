@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="card">
+    <div class="container">
+      <div class="card-header">
+        <h2>Agendamento de Serviços</h2>
+      </div>
+
+      <form action="{% url 'registar_agendamento' %}" method="post">
+        {% csrf_token %}
+
+        {% if messages %}
+          {% for message in messages %}
+            {% if message.tags == 'error' %}
+              <div class="alert alert-danger" role="alert">
+                <p>{{ message }}</p>
+              </div>
+            {% elif message.tags == 'success' %}
+              <div class="alert alert-success" role="alert">
+                <p>{{ message }}</p>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        <!-- Escolha do Serviço -->
+        <div class="form-group">
+          <label for="servico">Escolha o serviço</label>
+          <select id="servico" name="servico" class="form-control">
+            <option value="">Selecione</option>
+            {% for servico in servicos %}
+              <option value="{{ servico.id }}">{{ servico.nome }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Escolha da Data -->
+        <div class="form-group">
+          <label for="data">Escolha a data</label>
+          <input type="date" id="data" name="data" class="form-control" />
+        </div>
+
+        <!-- Botão para Buscar Horários -->
+        <button type="button" id="buscar-horarios" class="btn btn-success mb-3">Buscar Horários</button>
+
+        <hr />
+
+        <div id="horarios-disponiveis" class="form-group pt-3" hidden>
+          <label for="horario">Selecione o Horário</label>
+          <select id="horario" name="horario" class="form-control">
+            <!-- Horários serão inseridos aqui -->
+          </select>
+        </div>
+
+        <div id="agendar-button" class="form-group" hidden>
+          <button type="submit" class="btn btn-primary">Agendar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+  <script>
+    $('#buscar-horarios').click(function () {
+      let servico = $('#servico').val()
+      let data = $('#data').val()
+    
+      // Validação de campos
+      if (!servico || !data) {
+        showToast('Selecione um serviço e uma data.', 'error')
+        return
+      }
+    
+      $.ajax({
+        url: "{% url 'horarios_disponiveis' %}",
+        type: 'GET',
+        data: {
+          servico: servico,
+          data: data
+        },
+        success: function (response) {
+          console.log('Horários disponíveis:', response)
+          if (response.horarios && response.horarios.length > 0) {
+            // Limpar horários anteriores
+            $('#horario').empty()
+    
+            // Adicionar opções de horários
+            response.horarios.forEach(function (horario) {
+              $('#horario').append('<option value="' + horario + '">' + horario + '</option>')
+            })
+    
+            // Exibir o campo de horário e o botão de agendamento
+            $('#horarios-disponiveis').attr('hidden', false)
+            $('#agendar-button').attr('hidden', false)
+          } else {
+            showToast('Não há horários disponíveis para a data selecionada.', 'error')
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error('Erro ao buscar horários:', error)
+        }
+      })
+    })
+  </script>
+{% endblock %}

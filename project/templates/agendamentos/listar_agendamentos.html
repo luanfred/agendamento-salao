@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Agendamento de Serviços</h2>
+
+    <!-- Escolha do Serviço -->
+    <div class="form-group">
+        <label for="servico">Escolha o serviço:</label>
+        <select id="servico" class="form-control">
+            <option value="">Selecione</option>
+            <option value="1">Corte de Cabelo</option>
+            <option value="2">Barba</option>
+        </select>
+    </div>
+
+    <!-- Escolha da Data -->
+    <div class="form-group">
+        <label for="data">Escolha a data:</label>
+        <input type="date" id="data" class="form-control">
+    </div>
+
+    <!-- Botão para Buscar Horários -->
+    <button id="buscar-horarios" class="btn btn-primary">Buscar Horários</button>
+
+    <!-- Exibição dos Horários -->
+    <div id="horarios" class="mt-4"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#buscar-horarios").click(function() {
+            let servico = $("#servico").val();
+            let data = $("#data").val();
+            
+            if (!servico || !data) {
+                alert("Selecione um serviço e uma data.");
+                return;
+            }
+
+            $.get("/horarios_disponiveis/", { servico: servico, data: data }, function(response) {
+                let horariosDiv = $("#horarios");
+                horariosDiv.html("");
+
+                if (response.horarios.length === 0) {
+                    horariosDiv.html("<p class='text-danger'>Nenhum horário disponível.</p>");
+                } else {
+                    response.horarios.forEach(horario => {
+                        horariosDiv.append(
+                            `<button class='btn btn-success m-2'>${horario}</button>`
+                        );
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock content %}
