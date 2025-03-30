@@ -1,60 +1,85 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <h2>Agendamento de Serviços</h2>
-
-    <!-- Escolha do Serviço -->
-    <div class="form-group">
-        <label for="servico">Escolha o serviço:</label>
-        <select id="servico" class="form-control">
-            <option value="">Selecione</option>
-            <option value="1">Corte de Cabelo</option>
-            <option value="2">Barba</option>
-        </select>
+  <div class="page-header card">
+    <div class="row align-items-end">
+      <div class="col-lg-8">
+        <div class="page-header-title">
+          <i class="icofont icofont-table bg-c-blue"></i>
+          <div class="d-inline">
+            <h4>Listagem de Agendamentos</h4>
+            <span></span>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Escolha da Data -->
-    <div class="form-group">
-        <label for="data">Escolha a data:</label>
-        <input type="date" id="data" class="form-control">
+  <div class="page-body">
+    <div class="card">
+      <div class="card-header">
+        {% if messages %}
+          {% for message in messages %}
+            {% if message.tags == 'error' %}
+              <div class="alert alert-danger" role="alert">
+                <p>{{ message }}</p>
+              </div>
+            {% elif message.tags == 'success' %}
+              <div class="alert alert-success" role="alert">
+                <p>{{ message }}</p>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        <div class="card-header-right">
+          <ul class="list-unstyled card-option">
+            <li>
+              <i class="icofont icofont-simple-left"></i>
+            </li>
+            <li>
+              <i class="icofont icofont-maximize full-card"></i>
+            </li>
+            <li>
+              <i class="icofont icofont-minus minimize-card"></i>
+            </li>
+            <li>
+              <a href="{% url 'listar_agendamentos' %}"><i class="icofont icofont-refresh reload-card"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-block table-border-style">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Servico</th>
+                <th>Data</th>
+                <th>Horário</th>
+                <th>status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for agendamento in agendamentos %}
+                <tr>
+                  <td>{{ agendamento.servico.nome|default_if_none:'' }}</td>
+                  <td>{{ agendamento.data|default_if_none:'' }}</td>
+                  <td>{{ agendamento.horario }}</td>
+                  <td>{{ agendamento.status }}</td>
+                  <td>
+                    <a href="{% url 'alterar_horario' agendamento.id %}" class="btn btn-warning btn-md"><i class="ti-pencil"></i></a>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="4" class="text-center">Nenhum agendamento encontrado.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-
-    <!-- Botão para Buscar Horários -->
-    <button id="buscar-horarios" class="btn btn-primary">Buscar Horários</button>
-
-    <!-- Exibição dos Horários -->
-    <div id="horarios" class="mt-4"></div>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $("#buscar-horarios").click(function() {
-            let servico = $("#servico").val();
-            let data = $("#data").val();
-            
-            if (!servico || !data) {
-                alert("Selecione um serviço e uma data.");
-                return;
-            }
-
-            $.get("/horarios_disponiveis/", { servico: servico, data: data }, function(response) {
-                let horariosDiv = $("#horarios");
-                horariosDiv.html("");
-
-                if (response.horarios.length === 0) {
-                    horariosDiv.html("<p class='text-danger'>Nenhum horário disponível.</p>");
-                } else {
-                    response.horarios.forEach(horario => {
-                        horariosDiv.append(
-                            `<button class='btn btn-success m-2'>${horario}</button>`
-                        );
-                    });
-                }
-            });
-        });
-    });
-</script>
-
-{% endblock content %}
+  </div>
+{% endblock %}

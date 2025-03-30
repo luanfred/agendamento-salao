@@ -6,6 +6,8 @@ from django.contrib import messages as message
 from datetime import datetime, timedelta
 from django.http import JsonResponse
 from .models import Servico, Agendamento
+from django.contrib.auth.decorators import login_required
+from parametros.models import Parametro
 
 def registar_agendamento(request):
     if request.method == "POST":
@@ -27,8 +29,7 @@ def registar_agendamento(request):
         message.success(request, "Agendamento realizado com sucesso!")
         return redirect("registar_agendamento")
 
-
-    elif request.method == "GET":
+    else:
         servicos = Servico.objects.all()
         context = {
             "servicos": servicos,
@@ -59,3 +60,46 @@ def horarios_disponiveis(request):
             horarios_livres.append(horario.strftime("%H:%M"))
 
     return JsonResponse({"horarios": horarios_livres, "data": data_escolhida, "servico_id": servico_id}, status=200)
+
+
+def listar_agendamentos(request):
+    agendamentos = Agendamento.objects.filter(cliente=request.user).order_by("-data", "-horario")
+    context = {
+        "agendamentos": agendamentos,
+    }
+    return render(request, "agendamentos/listar_agendamentos.html", context=context)
+
+def alterar_horario(request, id):
+    if request.method == "POST":
+        agendamento = Agendamento.objects.filter(id=id).first()
+        if not agendamento:
+            message.error(request, "Agendamento não encontrado.")
+            return redirect("listar_agendamentos")
+
+        data_escolhida = request.POST.get("data")
+        horario = request.POST.get("horario")
+        data_hoje = datetime.today().date()
+    
+        if data_escolhida < (data_hoje + timedelta(days=2)).strftime("%Y-%m-%d"):
+            parametro = Parametro.objects.first()
+            if parametro and parametro.numero_celular:
+                numero_celular = parametro.numero_celular
+                message.error(request, f"Alteração só permitida com 2 dias de antecedência. Ligue para {numero_celular} para mais informações.")
+            else:
+                message.error(request, "Alteração só permitida com 2 dias de antecedência.")
+
+            return redirect("listar_agendamentos")
+
+        agendamento.data = data_escolhida
+        agendamento.horario = horario
+        agendamento.save()
+        
+        
+        message.success(request, "Horário alterado com sucesso!")
+        return redirect("listar_agendamentos")
+    else:
+        agendamento = Agendamento.objects.filter(id=id).first()
+        context = {
+            "agendamento": agendamento,
+        }
+        return render(request, "agendamentos/alterar_horario.html", context=context)
