@@ -11,6 +11,7 @@ from usuarios.models import Usuario
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from parametros.models import Parametro
+from django.db import transaction
 
 @login_required
 def home(request):
@@ -48,24 +49,31 @@ def usuario_registrar(request):
                 messages.error(request, 'Usuário já existe.')
                 return render(request, 'usuarios/registrar.html', {'form': form})
 
-            user = User(
-                username=email,
-                first_name=primeiro_nome,
-                last_name=ultimo_nome,
-                email=email,
-            )
-            user.set_password(senha)
-            user.save()
+            try:
+                with transaction.atomic():  # Garante que tudo será salvo junto ou nada será salvo
+                    user = User(
+                        username=email,
+                        first_name=primeiro_nome,
+                        last_name=ultimo_nome,
+                        email=email,
+                    )
+                    user.set_password(senha)
+                    user.save()
 
-            usuario = Usuario(
-                telefone=telefone,
-                user_id=user,
-                funcionario=is_functionario
-            )
-            usuario.save()
+                    usuario = Usuario(
+                        telefone=telefone,
+                        user_id=user,
+                        funcionario=is_functionario
+                    )
+                    usuario.save()
 
-            messages.success(request, 'Usuário criado com sucesso!')
-            return redirect('login')
+                messages.success(request, 'Usuário criado com sucesso!')
+                return redirect('login')
+
+            except Exception as e:
+                messages.error(request, f"Ocorreu um erro ao registrar o usuário: {str(e)}")
+                return render(request, 'usuarios/registrar.html', {'form': form})
+
         else:
             for error in form.errors.values():
                 messages.error(request, str(error))

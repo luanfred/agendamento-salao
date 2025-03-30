@@ -5,10 +5,10 @@
     <title>Leila Salão</title>
     <!-- HTML5 Shim and Respond.js IE9 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--                                                [if lt IE 9]>
+    <!--                                                           [if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-      <![endif]                                                -->
+      <![endif]                                                           -->
     <!-- Meta -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
@@ -147,7 +147,7 @@
                   </div>
 
                   <div class="input-group" id="div_chave_acesso" hidden>
-                    <input type="text" class="form-control" name="chave_acesso" id="chave_acesso" placeholder="Chave de Acesso" required />
+                    <input type="text" class="form-control" name="chave_acesso" id="chave_acesso" placeholder="Chave de Acesso" />
                     <span class="md-line"></span>
                   </div>
 
@@ -196,10 +196,12 @@
       
       $('#checkbox-funcionario').change(function () {
         if ($(this).is(':checked')) {
-          $('#div_chave_acesso').removeAttr('hidden')
+          $('#div_chave_acesso').removeAttr('hidden') // Exibe o campo
+          $('#chave_acesso').attr('required', 'required') // Torna obrigatório
           $('#is-funcionario').val('S')
         } else {
-          $('#div_chave_acesso').attr('hidden', 'hidden')
+          $('#div_chave_acesso').attr('hidden', 'hidden') // Oculta o campo
+          $('#chave_acesso').removeAttr('required') // Remove obrigatoriedade
           $('#is-funcionario').val('N')
         }
       })
