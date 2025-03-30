@@ -103,3 +103,76 @@ def alterar_horario(request, id):
             "agendamento": agendamento,
         }
         return render(request, "agendamentos/alterar_horario.html", context=context)
+
+
+def listar_todos_agendamentos(request):
+    agendamentos = Agendamento.objects.all().order_by("data", "horario")
+    context = {
+        "agendamentos": agendamentos,
+    }
+    return render(request, "agendamentos/listar_todos_agendamentos.html", context=context)
+
+
+def editar_agendamento(request, id):
+    agendamento = Agendamento.objects.filter(id=id).first()
+    if not agendamento:
+        message.error(request, "Agendamento não encontrado.")
+        return redirect("listar_todos_agendamentos")
+
+    if request.method == "POST":
+        novo_status = request.POST.get("status")
+        novo_horario = request.POST.get("horario")
+        nova_data = request.POST.get("data")
+        
+        try:
+            # Tentando converter a string de horário para um objeto do tipo time
+            novo_horario_obj = datetime.strptime(novo_horario, "%H:%M").time()
+            nova_data_obj = datetime.strptime(nova_data, "%Y-%m-%d").date()
+            agendamento.horario = novo_horario_obj
+            agendamento.data = nova_data_obj
+
+            if Agendamento.objects.filter(horario=novo_horario, data=nova_data).exclude(id=id).exists():
+                dict_status = {}
+                for status in status_agendamento:
+                    dict_status[status[0]] = status[1]
+                context = {
+                    "agendamento": agendamento,
+                    "status_agendamento": dict_status,
+                }
+                message.error(request, "Horário já agendado.")
+                return render(request, "agendamentos/editar.html", context)
+            
+        except ValueError:
+            message.error(request, "Formato de horário inválido. Use HH:MM.")
+            return render(request, "agendamentos/editar.html", {"agendamento": agendamento})
+        
+        for status in status_agendamento:
+            if novo_status == status[0]:
+                agendamento.status = status[1]
+                break
+
+
+        agendamento.save()
+        return redirect("listar_todos_agendamentos")
+    else:
+        dict_status = {}
+        for status in status_agendamento:
+            dict_status[status[0]] = status[1]
+        context = {
+            "agendamento": agendamento,
+            "status_agendamento": dict_status,
+        }
+        return render(request, "agendamentos/editar.html", context=context)
+    
+
+def detalhes_agendamento(request, id):
+    agendamento = Agendamento.objects.filter(id=id).first()
+    if not agendamento:
+        message.error(request, "Agendamento não encontrado.")
+        return redirect("listar_todos_agendamentos")
+
+    context = {
+        "agendamento": agendamento,
+    }
+    return render(request, "agendamentos/detalhes.html", context=context)
+    

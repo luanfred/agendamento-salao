@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="page-header card">
+    <div class="row align-items-end">
+      <div class="col-lg-8">
+        <div class="page-header-title">
+          <i class="icofont icofont-table bg-c-blue"></i>
+          <div class="d-inline">
+            <h4>Listagem de Agendamentos</h4>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-body">
+    <div class="card">
+      <div class="card-header">
+        {% if messages %}
+          {% for message in messages %}
+            {% if message.tags == 'error' %}
+              <div class="alert alert-danger" role="alert">
+                <p>{{ message }}</p>
+              </div>
+            {% elif message.tags == 'success' %}
+              <div class="alert alert-success" role="alert">
+                <p>{{ message }}</p>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        <div class="card-header-right">
+          <ul class="list-unstyled card-option">
+            <li>
+              <i class="icofont icofont-simple-left"></i>
+            </li>
+            <li>
+              <i class="icofont icofont-maximize full-card"></i>
+            </li>
+            <li>
+              <i class="icofont icofont-minus minimize-card"></i>
+            </li>
+            <li>
+              <a href="{% url 'listar_agendamentos' %}"><i class="icofont icofont-refresh reload-card"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-block table-border-style">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Servico</th>
+                <th>Data</th>
+                <th>Horário</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for agendamento in agendamentos %}
+                <tr>
+                  <td>{{ agendamento.cliente.get_full_name|default_if_none:'' }}</td>
+                  <td>{{ agendamento.servico.nome|default_if_none:'' }}</td>
+                  <td>{{ agendamento.data|default_if_none:'' }}</td>
+                  <td>{{ agendamento.horario }}</td>
+                  <td>{{ agendamento.status }}</td>
+                  <td>
+                    <a href="{% url 'detalhes_agendamento' agendamento.id %}" class="btn btn-info btn-md"><i class="ti-eye"></i></a>
+                    <a href="{% url 'editar_agendamento' agendamento.id %}" class="btn btn-warning btn-md"><i class="ti-pencil"></i></a>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="4" class="text-center">Nenhum agendamento encontrado.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

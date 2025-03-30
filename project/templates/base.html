@@ -117,17 +117,24 @@
                 </div>
                 <ul class="pcoded-item pcoded-left-item">
                   {% if is_funcionario %}
-                    <li class="active">
+                    <li class="">
                       <a href="{% url 'index_servico' %}">
                         <span class="pcoded-micon"><i class="ti-briefcase"></i><b>S</b></span>
                         <span class="pcoded-mtext" data-i18n="nav.dash.main">Serviços</span>
                         <span class="pcoded-mcaret"></span>
                       </a>
                     </li>
-                    <li class="active">
+                    <li class="">
                       <a href="{% url 'index_parametro' %}">
                         <span class="pcoded-micon"><i class="ti-settings"></i><b></b></span>
                         <span class="pcoded-mtext" data-i18n="nav.dash.main">Parametros</span>
+                        <span class="pcoded-mcaret"></span>
+                      </a>
+                    </li>
+                    <li class="">
+                      <a href="{% url 'listar_todos_agendamentos' %}">
+                        <span class="pcoded-micon"><i class="ti-agenda"></i><b></b></span>
+                        <span class="pcoded-mtext" data-i18n="nav.dash.main">Lista de Agendamentos</span>
                         <span class="pcoded-mcaret"></span>
                       </a>
                     </li>
@@ -155,7 +162,7 @@
                         </li>
                       </ul>
                     </li>
-                    <li class="active">
+                    <li class="">
                       <a href="{% url 'index_servico' %}">
                         <span class="pcoded-micon"><i class="ti-briefcase"></i><b>S</b></span>
                         <span class="pcoded-mtext" data-i18n="nav.dash.main">Serviços</span>
