@@ -15,7 +15,11 @@ from django.db import transaction
 
 @login_required
 def home(request):
-    return render(request, 'home/home.html')
+    is_funcionario = request.user.usuario.funcionario if hasattr(request.user, 'usuario') else False
+    if is_funcionario:
+        return redirect('listar_todos_agendamentos')
+    else:
+        return redirect('registar_agendamento')
 
 
 def usuario_registrar(request):
