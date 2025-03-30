@@ -106,9 +106,32 @@ def alterar_horario(request, id):
 
 
 def listar_todos_agendamentos(request):
-    agendamentos = Agendamento.objects.all().order_by("data", "horario")
+    status_filter = request.GET.get('status')
+    data_inicio = request.GET.get('data_inicio')
+    data_fim = request.GET.get('data_fim')
+
+    # Buscar todos os agendamentos inicialmente
+    agendamentos = Agendamento.objects.all()
+
+    # Filtrar por status se o usuário selecionar um
+    if status_filter:
+        agendamentos = agendamentos.filter(status=status_filter)
+
+    # Aplicar filtro de intervalo de datas
+    if data_inicio and data_fim:
+        data_inicio = datetime.strptime(data_inicio, "%Y-%m-%d").date()
+        data_fim = datetime.strptime(data_fim, "%Y-%m-%d").date()
+        agendamentos = agendamentos.filter(data__range=[data_inicio, data_fim])
+    elif data_inicio:  # Caso o usuário preencha apenas a data de início
+        data_inicio = datetime.strptime(data_inicio, "%Y-%m-%d").date()
+        agendamentos = agendamentos.filter(data__gte=data_inicio)
+    elif data_fim:  # Caso o usuário preencha apenas a data de fim
+        data_fim = datetime.strptime(data_fim, "%Y-%m-%d").date()
+        agendamentos = agendamentos.filter(data__lte=data_fim)
+
     context = {
-        "agendamentos": agendamentos,
+        'agendamentos': agendamentos,
+        'status_agendamento': dict(status_agendamento),  # Para popular o select de status
     }
     return render(request, "agendamentos/listar_todos_agendamentos.html", context=context)
 
@@ -140,7 +163,7 @@ def editar_agendamento(request, id):
                     "status_agendamento": dict_status,
                 }
                 message.error(request, "Horário já agendado.")
-                return render(request, "agendamentos/editar.html", context)
+                return render(request, "agendamentos/editar.html",context)
             
         except ValueError:
             message.error(request, "Formato de horário inválido. Use HH:MM.")

@@ -49,6 +49,37 @@
         </div>
       </div>
       <div class="card-block table-border-style">
+        <!-- Filtros -->
+        <form method="GET" action="{% url 'listar_todos_agendamentos' %}" class="container">
+          <div class="row d-flex justify-content-between mb-4">
+            <div class="col-md-3">
+              <label for="status">Status</label>
+              <select name="status" id="status" class="form-control">
+                <option value="">--Selecione--</option>
+                {% for key, value in status_agendamento.items %}
+                  <option value="{{ key }}" {% if key == request.GET.status %}selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label for="data_inicio">Data Início</label>
+              <input type="date" name="data_inicio" id="data_inicio" class="form-control" value="{{ request.GET.data_inicio }}">
+            </div>
+        
+            <div class="col-md-3">
+              <label for="data_fim">Data Fim</label>
+              <input type="date" name="data_fim" id="data_fim" class="form-control" value="{{ request.GET.data_fim }}">
+            </div>
+
+            <div class="col-md-2">
+              <label>&nbsp;</label>
+              <button type="submit" class="btn btn-primary form-control">Filtrar</button>
+            </div>
+          </div>
+        </form>
+
+        <!-- Tabela de agendamentos -->
         <div class="table-responsive">
           <table class="table table-hover">
             <thead>
