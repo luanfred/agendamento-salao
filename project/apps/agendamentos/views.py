@@ -9,6 +9,7 @@ from .models import Servico, Agendamento
 from django.contrib.auth.decorators import login_required
 from parametros.models import Parametro
 
+@login_required
 def registar_agendamento(request):
     if request.method == "POST":
         cliente = request.user
@@ -36,7 +37,7 @@ def registar_agendamento(request):
         }
         return render(request, "agendamentos/registrar.html", context=context)
 
-
+@login_required
 def horarios_disponiveis(request):
     servico_id = request.GET.get("servico")
     data_escolhida = request.GET.get("data")  # Formato: YYYY-MM-DD
@@ -62,6 +63,7 @@ def horarios_disponiveis(request):
     return JsonResponse({"horarios": horarios_livres, "data": data_escolhida, "servico_id": servico_id}, status=200)
 
 
+@login_required
 def listar_agendamentos(request):
     agendamentos = Agendamento.objects.filter(cliente=request.user).order_by("-data", "-horario")
     context = {
@@ -69,6 +71,8 @@ def listar_agendamentos(request):
     }
     return render(request, "agendamentos/listar_agendamentos.html", context=context)
 
+
+@login_required
 def alterar_horario(request, id):
     if request.method == "POST":
         agendamento = Agendamento.objects.filter(id=id).first()
@@ -105,6 +109,7 @@ def alterar_horario(request, id):
         return render(request, "agendamentos/alterar_horario.html", context=context)
 
 
+@login_required
 def listar_todos_agendamentos(request):
     status_filter = request.GET.get('status')
     data_inicio = request.GET.get('data_inicio')
@@ -136,6 +141,7 @@ def listar_todos_agendamentos(request):
     return render(request, "agendamentos/listar_todos_agendamentos.html", context=context)
 
 
+@login_required
 def editar_agendamento(request, id):
     agendamento = Agendamento.objects.filter(id=id).first()
     if not agendamento:
@@ -187,7 +193,8 @@ def editar_agendamento(request, id):
         }
         return render(request, "agendamentos/editar.html", context=context)
     
-
+    
+@login_required
 def detalhes_agendamento(request, id):
     agendamento = Agendamento.objects.filter(id=id).first()
     if not agendamento:
