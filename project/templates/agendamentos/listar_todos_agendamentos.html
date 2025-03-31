@@ -57,19 +57,23 @@
               <select name="status" id="status" class="form-control">
                 <option value="">--Selecione--</option>
                 {% for key, value in status_agendamento.items %}
-                  <option value="{{ key }}" {% if key == request.GET.status %}selected{% endif %}>{{ value }}</option>
+                  {% if key == request.GET.status %}
+                    <option value="{{ key }}" selected>{{ value }}</option>
+                  {% else %}
+                    <option value="{{ key }}">{{ value }}</option>
+                  {% endif %}
                 {% endfor %}
               </select>
             </div>
 
             <div class="col-md-3">
               <label for="data_inicio">Data Início</label>
-              <input type="date" name="data_inicio" id="data_inicio" class="form-control" value="{{ request.GET.data_inicio }}">
+              <input type="date" name="data_inicio" id="data_inicio" class="form-control" value="{{ request.GET.data_inicio }}" />
             </div>
-        
+
             <div class="col-md-3">
               <label for="data_fim">Data Fim</label>
-              <input type="date" name="data_fim" id="data_fim" class="form-control" value="{{ request.GET.data_fim }}">
+              <input type="date" name="data_fim" id="data_fim" class="form-control" value="{{ request.GET.data_fim }}" />
             </div>
 
             <div class="col-md-2">
