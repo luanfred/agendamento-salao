@@ -1,0 +1,44 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password  # Senha do root
+      MYSQL_DATABASE: leila_salao         # Nome do banco de dados
+      MYSQL_USER: leila                   # Nome do usuário
+      MYSQL_PASSWORD: mudar123            # Senha do usuário
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app_network
+
+  web:
+    build: .
+    container_name: web
+    command: bash -c "
+        dockerize -wait tcp://db:3306 -timeout 30s &&
+        python manage.py migrate &&
+        python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_NAME=leila_salao             # Nome do banco que será usado pelo Django
+      - DB_USER=leila                   # Nome do usuário
+      - DB_PASSWORD=mudar123            # Senha do usuário
+      - DB_HOST=db                      # Serviço do banco no docker-compose
+      - DB_PORT=3306                    # Porta do banco
+    depends_on:
+      - db
+    networks:
+      - app_network
+
+volumes:
+  db_data:
+
+networks:
+  app_network:
+    driver: bridge
