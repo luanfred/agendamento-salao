@@ -19,4 +19,4 @@ COPY . /app
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Rodando o comando para aguardar o banco de dados e iniciar o Django
-CMD ["dockerize", "-wait", "tcp://db:3306", "-timeout", "30s", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["dockerize", "-wait", "tcp://db:3306", "-timeout", "100s", "python", "manage.py", "runserver", "0.0.0.0:8000"]
